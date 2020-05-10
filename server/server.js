@@ -74,12 +74,12 @@ app.post('/fetchUserDetails', (req, res) => {
     let password = req.body.password;
 
     conn.connect(err => {
-        if (err) console.log('could not connect to db');
+        if (err) res.send(false);
         console.log('db connected')
         const sql = "select userid FROM userstable where username = '"+user+"' and password = '"+password +"' ";
         DBreq.query(sql,
         (err, recordset) => {
-        console.log(err)
+        
             if (err) res.send(false);
             else res.send(recordset);
 
@@ -95,13 +95,13 @@ app.get('/createTable', (req, res) => {
 
 
     conn.connect(err => {
-        if (err) console.log('could not connect to db');
+        if (err) res.send(false);
         console.log('db connected')
 
         DBreq.query('CREATE TABLE userstable(userid int not null,username varchar(20) not null,password  varchar(20) not null,primary key (userid));create table category(cid int not null ,category_name varchar(20) not null ,primary key (cid));CREATE TABLE projects(pid int not null,"project title"  varchar(20) not null,userid  int not null,cid  int not null,FOREIGN KEY (userid) REFERENCES userstable(userid),FOREIGN KEY (cid) REFERENCES category(cid),primary key (pid));', 
         (err, recordset) => {
 
-            console.log(err,'err')
+
 
             if (err) res.send(false);
             else res.send(recordset);
@@ -116,17 +116,17 @@ app.get('/createTable', (req, res) => {
 
 app.get('/insertTable', (req, res) => {
 
-    console.log(userconfig, 'userconfig');
+   
 
     conn.connect(err => {
-        if (err) console.log('could not connect to db');
+        if (err) res.send(false);
         console.log('db connected')
 
        DBreq.query("insert into userstable values( 1,'mallik','12345'),(2,'other','2354'); insert into category values (1,'literature'),(2,'science'), (3,'engineering'),(4,'history'); insert into projects values(9,'testing hist2',2,4),(10,'testing hist3',2,4),(1,'testing lit',1,1),(2,'testing science',1,2),(3,'testing engineering',1,3),(4,'testing hist',1,4),(5,'testing lit',2,1),(6,'testing science',2,2),(7,'testing engineering',2,3),(8,'testing hist',2,4); ",
             
         (err, recordset) => {
 
-                if (err) console.log(err);
+                if (err) res.send(false);
                 else res.send(recordset);
 
                 conn.close()
@@ -139,7 +139,7 @@ app.get('/insertTable', (req, res) => {
 app.get('/fetchAllUserDetails', (req, res) => {
 
     conn.connect(err => {
-        if (err) console.log('could not connect to db');
+        if (err) res.send(false);
         console.log('db connected')
 
 
@@ -151,9 +151,9 @@ app.get('/fetchAllUserDetails', (req, res) => {
             "category on category.cid = projects.cid; ",
             function (err, recordset)  {
 
-                 console.log(recordset);
+           
 
-                if (err) console.log(err);
+                if (err) res.send(false);
                 else res.send(recordset);
 
                 res.end();
@@ -171,7 +171,7 @@ app.get('/fetchUserIdDetails/:userId', (req, res) => {
 
 
     conn.connect(err => {
-        if (err) console.log('could not connect to db');
+        if (err) res.send(false);
         console.log('db connected')
         const sql = " select projects.[project title], category.category_name , "+
                         "userstable.username "+
@@ -182,7 +182,7 @@ app.get('/fetchUserIdDetails/:userId', (req, res) => {
                         " where projects.userid = "+userId;
         DBreq.query(sql,
         (err, recordset) => {
-        console.log(err)
+        
             if (err) res.send(false);
             else res.send(recordset);
 
